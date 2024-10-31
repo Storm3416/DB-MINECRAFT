@@ -83,11 +83,14 @@ export class Database {
         })
         properties[this.name].properties = []
     }
-    
+
     clearAllProprieties() {
         properties = []
         world.getDynamicPropertyIds().forEach(d => {
             world.setDynamicProperty(d)
         })
+    }
+    getAll() {
+        return properties[this.name]?.properties.map(p => this.get(p.split(":")[1])) || [];
     }
 }
