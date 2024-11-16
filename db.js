@@ -93,4 +93,11 @@ export class Database {
     getAll() {
         return properties[this.name]?.properties.map(p => this.get(p.split(":")[1])) || [];
     }
+    sendLogs() {
+        let allData = {};
+        for (let dbName in properties) { allData[dbName] = properties[dbName].properties.map(prop => { const propertyName = prop.split(":")[1]; const propertyValue = this.get(propertyName); return { [propertyName]: propertyValue }; }); }
+        console.debug("Database Logs: ", JSON.stringify(allData, null, 2));
+        console.error("Database Logs: ", JSON.stringify(allData, null, 2));
+        console.log("Database Logs: ", JSON.stringify(allData, null, 2));
+    }
 }
