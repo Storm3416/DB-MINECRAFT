@@ -93,6 +93,21 @@ export class Database {
     getAll() {
         return properties[this.name]?.properties.map(p => this.get(p.split(":")[1])) || [];
     }
+    update(property, newValue) {
+        const currentValue = this.get(property);
+        if (currentValue === undefined) return console.warn(`Property "${property}" not found.`);
+    
+        let updatedValue = (typeof currentValue === "object" && typeof newValue === "object")
+            ? { ...currentValue, ...newValue }
+            : (Array.isArray(currentValue) && Array.isArray(newValue))
+            ? [...currentValue, ...newValue]
+            : newValue;
+    
+        if (JSON.stringify(currentValue) !== JSON.stringify(updatedValue)) {
+            world.setDynamicProperty(this.name + ":" + property, JSON.stringify(updatedValue));
+            console.log(`Updated "${property}":`, updatedValue);
+        }
+    }
     sendLogs() {
         let allData = {};
         for (let dbName in properties) { allData[dbName] = properties[dbName].properties.map(prop => { const propertyName = prop.split(":")[1]; const propertyValue = this.get(propertyName); return { [propertyName]: propertyValue }; }); }
